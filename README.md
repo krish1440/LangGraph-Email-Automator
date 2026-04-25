@@ -1,6 +1,13 @@
 # 🤖 LangGraph Email Automator & AI Sales Agent
 
-An advanced, dual-purpose email automation engine powered by **LangGraph** and **Gemini 2.0 Flash**. This system acts as a 24/7 intelligent responder for both personal portfolio inquiries and business leads (Abhay Engineering), providing contextual, AI-generated replies based on unique knowledge bases.
+![Gemini](https://img.shields.io/badge/Google_Gemini-2.5_Flash-4285F4?logo=google-gemini&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-Orchestration-orange)
+![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
+![Gmail](https://img.shields.io/badge/Gmail_API-v1-EA4335?logo=gmail&logoColor=white)
+
+**Live Sites:** [Abhay Engineering](https://www.abhayengineering.in/) | [Personal Portfolio](https://portfolio-krish-chaudhary.vercel.app/)
+
+An advanced, dual-purpose email automation engine powered by **LangGraph** and **Gemini 2.5 Flash**. This system acts as a 24/7 intelligent responder for both personal portfolio inquiries and business leads (Abhay Engineering), providing contextual, AI-generated replies based on unique knowledge bases.
 
 ---
 
