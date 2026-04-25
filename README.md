@@ -1,53 +1,75 @@
-# LangGraph Email Automator
+# 🤖 LangGraph Email Automator & AI Sales Agent
 
-This project automatically processes Web3Forms email notifications and replies to them using Gemini 2.0 Flash and LangGraph.
+An advanced, dual-purpose email automation engine powered by **LangGraph** and **Gemini 2.0 Flash**. This system acts as a 24/7 intelligent responder for both personal portfolio inquiries and business leads (Abhay Engineering), providing contextual, AI-generated replies based on unique knowledge bases.
 
-## Setup Instructions
+---
 
-### 1. Gmail API Setup
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
-2. Create a new project.
-3. Enable the **Gmail API**.
-4. Go to **APIs & Services > OAuth consent screen**.
-   - Select **External**.
-   - Fill in the required app information.
-   - Add your email (`krishchaudhary144@gmail.com`) to **Test users**.
-5. Go to **APIs & Services > Credentials**.
-   - Click **Create Credentials > OAuth client ID**.
-   - Select **Desktop app**.
-   - Name it "Email Automator" and click **Create**.
-6. Download the JSON file, rename it to `credentials.json`, and place it in the root of this project.
+## 🌟 Key Features
+- **Contextual Routing:** Automatically detects if an inquiry is for the Business or Personal site using LLM-based parsing.
+- **Dynamic Knowledge Retrieval:** Uses separate Markdown-based knowledge bases to provide accurate, specific product or project details.
+- **Smart Logic:** 
+    - **Sales Agent (Abhay):** Handles pricing inquiries professionally, collects lead details, and CCs the main office.
+    - **Personal Assistant (Portfolio):** Friendly, humble responses that avoid over-sharing unless specific technical questions are asked.
+- **Zero-Touch Automation:** Deployed via GitHub Actions to run every 15 minutes for free.
+- **State Management:** Built with a state-machine architecture (LangGraph) for reliable data flow and error handling.
 
-### 2. Install Dependencies
+---
+
+## 📂 Project Architecture & File Breakdown
+
+### 🏗️ Core Logic
+- **`src/main.py`**: The heart of the system. It defines the `StateGraph`, including nodes for fetching, parsing, generating, and sending emails. It utilizes conditional edges for smart routing.
+- **`src/auth_gmail.py`**: A dedicated utility script to handle the OAuth2 flow with Google APIs and generate the persistent `token.json`.
+
+### 📚 Knowledge Base (`/data`)
+- **`data/abhay_engineering.md`**: Detailed technical specs, pricing policies, and response guidelines for the engineering firm.
+- **`data/portfolio_krish.md`**: Comprehensive record of Krish's AI/ML projects, skills, and personal communication style.
+
+### ⚙️ Configuration & DevOps
+- **`.github/workflows/main.yml`**: CI/CD pipeline that triggers the automation on a cron schedule (every 15 mins).
+- **`.gitignore`**: Critical security file ensuring that `token.json`, `credentials.json`, and `.env` are never exposed in the public repository.
+- **`requirements.txt`**: List of enterprise-grade libraries used, including `langgraph`, `langchain-google-genai`, and `google-api-python-client`.
+
+---
+
+## 🛠️ Setup & Installation
+
+### 1. Google Cloud Configuration
+1. Enable **Gmail API** in your GCP Console.
+2. Create **OAuth 2.0 Credentials (Desktop App)**.
+3. Download the JSON, rename it to `credentials.json`, and place it in the root directory.
+
+### 2. Environment Setup
 ```bash
 pip install -r requirements.txt
+cp .env.example .env
 ```
+Add your `GOOGLE_API_KEY` from Google AI Studio to the `.env` file.
 
-### 3. Configure Environment
-1. Copy `.env.example` to `.env`.
-2. Add your `GOOGLE_API_KEY` (from [Google AI Studio](https://aistudio.google.com/)).
-
-### 4. Authenticate Gmail
-Run the following script once. It will open your browser to log in.
+### 3. Authentication
+Run the one-time authentication script:
 ```bash
 python src/auth_gmail.py
 ```
-This will create a `token.json` file. **Keep this file secure.**
+This generates the `token.json` required for headless automation.
 
-### 5. Customize Knowledge Base
-Edit the files in the `data/` folder to provide accurate information for the AI to use in its replies.
-- `data/abhay_engineering.md`
-- `data/portfolio_krish.md`
+---
 
-### 6. Run the Automator
-To check for new emails and reply:
-```bash
-python src/main.py
-```
+## 🚀 Deployment (24/7 Automation)
 
-## Automation (GitHub Actions)
-To make this run 24/7 for free:
-1. Create a private GitHub repository.
-2. Add your code (except `token.json` and `.env`).
-3. Add `GOOGLE_API_KEY` and the contents of `token.json` to **GitHub Actions Secrets**.
-4. Set up a workflow to run `src/main.py` on a schedule.
+This project is designed to run in a "Serverless" fashion using GitHub Actions.
+
+1.  **Push** this code to your GitHub repository.
+2.  **Add Secrets**: Go to **Settings > Secrets and variables > Actions** and add:
+    - `GOOGLE_API_KEY`: Your Gemini API Key.
+    - `GMAIL_TOKEN_JSON`: The full text content of your `token.json` file.
+3.  The workflow will now execute every 15 minutes, check your inbox, and handle your leads automatically!
+
+---
+
+## 🛠️ Technologies Used
+- **Orchestration:** LangGraph
+- **LLM:** Google Gemini 2.0 Flash
+- **Framework:** LangChain
+- **API:** Google Gmail API v1
+- **Automation:** GitHub Actions
