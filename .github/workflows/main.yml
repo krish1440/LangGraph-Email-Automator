@@ -2,7 +2,7 @@ name: Email Automator Cron
 
 on:
   schedule:
-    - cron: '0 * * * *' 
+    - cron: '30 4 */2 * *'
   workflow_dispatch: # Allows manual trigger
 
 jobs:
