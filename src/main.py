@@ -35,9 +35,19 @@ class AgentState(TypedDict):
 def fetch_emails(state: AgentState):
     """Fetch new form submission emails from Gmail."""
     if not os.path.exists(GMAIL_TOKEN_PATH):
-        return {"status": "Error: token.json missing"}
+        return {"status": "Error: token.json missing. Run src/auth_gmail.py locally to generate it."}
 
-    creds = Credentials.from_authorized_user_file(GMAIL_TOKEN_PATH)
+    try:
+        creds = Credentials.from_authorized_user_file(GMAIL_TOKEN_PATH)
+        if creds and creds.expired and creds.refresh_token:
+            from google.auth.transport.requests import Request
+            creds.refresh(Request())
+            # Save the refreshed token
+            with open(GMAIL_TOKEN_PATH, 'w') as token:
+                token.write(creds.to_json())
+    except Exception as e:
+        return {"status": f"Error: Authentication failed ({str(e)}). Your token might be revoked or your Client Secret changed."}
+
     service = build('gmail', 'v1', credentials=creds)
 
     try:
@@ -168,7 +178,14 @@ def send_email(state: AgentState):
     if not state.get('reply_content'):
         return {"status": "No reply to send"}
 
-    creds = Credentials.from_authorized_user_file(GMAIL_TOKEN_PATH)
+    try:
+        creds = Credentials.from_authorized_user_file(GMAIL_TOKEN_PATH)
+        if creds and creds.expired and creds.refresh_token:
+            from google.auth.transport.requests import Request
+            creds.refresh(Request())
+    except Exception as e:
+        return {"status": f"Error: Authentication failed during send ({str(e)})"}
+
     service = build('gmail', 'v1', credentials=creds)
 
     try:
@@ -215,11 +232,26 @@ def create_graph():
         source = state.get('source_website', 'none')
         if source and source != "none":
             return "generate_reply"
+        return "check_more"
+
+    def check_more(state: AgentState):
+        """Pop the processed email and check if there are more."""
+        emails = state.get('emails', [])
+        if len(emails) > 1:
+            return {"emails": emails[1:], "status": f"Processed one, {len(emails)-1} remaining"}
+        return {"emails": [], "status": "All emails processed"}
+
+    def next_step(state: AgentState):
+        if state['emails']:
+            return "parse_email"
         return END
 
+    workflow.add_node("check_more", check_more)
+    
     workflow.add_conditional_edges("parse_email", should_reply)
     workflow.add_edge("generate_reply", "send_email")
-    workflow.add_edge("send_email", END)
+    workflow.add_edge("send_email", "check_more")
+    workflow.add_conditional_edges("check_more", next_step)
 
     return workflow.compile()
 
