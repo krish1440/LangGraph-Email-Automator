@@ -57,16 +57,18 @@ def fetch_emails(state: AgentState):
         messages = results.get('messages', [])
 
         def get_body(payload):
+            body = ""
             if 'parts' in payload:
                 for part in payload['parts']:
-                    if part['mimeType'] == 'text/plain':
-                        return base64.urlsafe_b64decode(part['body']['data']).decode()
+                    if part['mimeType'] in ['text/plain', 'text/html']:
+                        data = part['body'].get('data')
+                        if data:
+                            body += base64.urlsafe_b64decode(data).decode()
                     if 'parts' in part:
-                        body = get_body(part)
-                        if body: return body
+                        body += get_body(part)
             elif 'body' in payload and 'data' in payload['body']:
-                return base64.urlsafe_b64decode(payload['body']['data']).decode()
-            return ""
+                body += base64.urlsafe_b64decode(payload['body']['data']).decode()
+            return body
 
         emails_to_process = []
         for msg in messages:
@@ -111,7 +113,8 @@ def parse_email(state: AgentState):
     4. Their Message
     5. Which website is this from? 
        - If it mentions 'abhay engineering' or 'dairy' or 'travis', it is 'abhay'.
-       - If it mentions 'portfolio' or 'krish chaudhary' or 'data science' or 'projects', it is 'portfolio'.
+       - If it mentions 'portfolio' or 'krish chaudhary' or 'krish-chaudhary.me' or 'data science' or 'projects', it is 'portfolio'.
+       - IMPORTANT: Check the bottom of the email for links like 'This e-mail was sent from https://krish-chaudhary.me/' or similar footers.
        - Otherwise, say 'none'.
 
     Return ONLY a valid JSON object like this:

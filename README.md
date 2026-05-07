@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
 ![Gmail](https://img.shields.io/badge/Gmail_API-v1-EA4335?logo=gmail&logoColor=white)
 
-**Live Sites:** [Abhay Engineering](https://www.abhayengineering.in/) | [Personal Portfolio](https://portfolio-krish-chaudhary.vercel.app/)
+**Live Sites:** [Abhay Engineering](https://www.abhayengineering.in/) | [Personal Portfolio](https://krish-chaudhary.me/)
 
 An advanced, dual-purpose email automation engine powered by **LangGraph** and **Gemini 2.5 Flash**. This system acts as a 24/7 intelligent responder for both personal portfolio inquiries and business leads (Abhay Engineering), providing contextual, AI-generated replies based on unique knowledge bases.
 

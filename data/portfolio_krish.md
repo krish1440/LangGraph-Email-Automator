@@ -33,6 +33,7 @@
 ## Contact Information
 - **LinkedIn:** https://www.linkedin.com/in/krish-chaudhary-krc8252
 - **GitHub:** https://github.com/krish1440/
+- **Website:** https://krish-chaudhary.me/
 - **Mobile:** 6353160662 (Only share this if the person specifically asks for a phone call or direct contact).
 
 ## Response Guidelines
